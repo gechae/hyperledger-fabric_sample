@@ -51,7 +51,7 @@ services:
       # - ORDERER_PORT_orderer1=7050
       # - ORDERER_PORT_orderer2=7050
 
-      # - CHANNEL_NAME_1=cert-channel
-      # - CHANNEL_NAME_2=tsa-channel
+      # - CHANNEL_NAME_1=channel1
+      # - CHANNEL_NAME_2=channel2
       - PROD_USER=${PROD_USER}
 
