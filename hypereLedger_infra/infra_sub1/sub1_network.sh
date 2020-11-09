@@ -5,41 +5,41 @@ function printHelp() {
     echo
     echo
     echo "Usage: "
-    echo "  hana_network.sh -up <after start ca, setup container and copy crypto-config to other server, start fabric network> "
-    echo "  hana_network.sh -up [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
-    echo "  hana_network.sh -up [container_name <other containers>]"
-    echo "  hana_network.sh -down <all containers stop and network reset>"
-    echo "  hana_network.sh -down [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
-    echo "  hana_network.sh -down [container_name <other containers>]"
+    echo "  sub1_network.sh -up <after start ca, setup container and copy crypto-config to other server, start fabric network> "
+    echo "  sub1_network.sh -up [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
+    echo "  sub1_network.sh -up [container_name <other containers>]"
+    echo "  sub1_network.sh -down <all containers stop and network reset>"
+    echo "  sub1_network.sh -down [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
+    echo "  sub1_network.sh -down [container_name <other containers>]"
     echo
-    # echo "  hana_network.sh -install [channel_name] [chaincode_name] [version (optional)]"
-    echo "  hana_network.sh -install [channel_name] [chaincode_name] [version] <install chaincode to specific version>"
+    # echo "  sub1_network.sh -install [channel_name] [chaincode_name] [version (optional)]"
+    echo "  sub1_network.sh -install [channel_name] [chaincode_name] [version] <install chaincode to specific version>"
     echo
     echo "start example: "
-    echo "  hana_network.sh -up "
-    echo "  hana_network.sh -up ca <ca, setup container start>"
-    echo "  hana_network.sh -up o <orderer container start>"
-    echo "  hana_network.sh -up p <peer container start>"
-    echo "  hana_network.sh -up cli <cli container start>"
+    echo "  sub1_network.sh -up "
+    echo "  sub1_network.sh -up ca <ca, setup container start>"
+    echo "  sub1_network.sh -up o <orderer container start>"
+    echo "  sub1_network.sh -up p <peer container start>"
+    echo "  sub1_network.sh -up cli <cli container start>"
     echo
     echo "shutdown example"
-    echo "  hana_network.sh -down "
-    echo "  hana_network.sh -down ca <ca, setup container stop>"
-    echo "  hana_network.sh -down o <orderer container stop>"
-    echo "  hana_network.sh -down p <peer container stop>"
-    echo "  hana_network.sh -down cli <cli container stop>"
+    echo "  sub1_network.sh -down "
+    echo "  sub1_network.sh -down ca <ca, setup container stop>"
+    echo "  sub1_network.sh -down o <orderer container stop>"
+    echo "  sub1_network.sh -down p <peer container stop>"
+    echo "  sub1_network.sh -down cli <cli container stop>"
     echo
     echo "install example"
-    # echo "  hana_network.sh -install cert-channel hana-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  hana_network.sh -install cert-channel hana-cert-cc 3.2.11 <install to specific version>"
-    # echo "  hana_network.sh -install tsa-channel hana-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  hana_network.sh -install tsa-channel hana-tsa-cc 3.2.11 <install to specific version>"
+    # echo "  sub1_network.sh -install cert-channel hana-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub1_network.sh -install cert-channel hana-cert-cc 3.2.11 <install to specific version>"
+    # echo "  sub1_network.sh -install tsa-channel hana-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub1_network.sh -install tsa-channel hana-tsa-cc 3.2.11 <install to specific version>"
     echo
     echo "upgrade example"
-    # echo "  hana_network.sh -install cert-channel hana-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  hana_network.sh -upgrade cert-channel hana-cert-cc 3.2.11 <upgrade to specific version>"
-    # echo "  hana_network.sh -install tsa-channel hana-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  hana_network.sh -upgrade tsa-channel hana-tsa-cc 3.2.11 <upgrade to specific version>"
+    # echo "  sub1_network.sh -install cert-channel hana-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub1_network.sh -upgrade cert-channel hana-cert-cc 3.2.11 <upgrade to specific version>"
+    # echo "  sub1_network.sh -install tsa-channel hana-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub1_network.sh -upgrade tsa-channel hana-tsa-cc 3.2.11 <upgrade to specific version>"
     echo
     echo "============"
     echo "   NOTICE   "
@@ -77,20 +77,6 @@ function installChaincode() {
     else
         echo "You must input chaincode version"
         exit 1
-
-        # #### 핑거버전 ####
-        # newccver=$(expr ${ccver_list[2]} + 1)
-        # newccver=$(seq -f "%02g" $newccver $newccver)
-        # newccver=${ccver_list[0]}.${ccver_list[1]}.$newccver
-
-        #  #### 농협정보 개발버전 ####
-        # newccver=`expr ${ccver_list[1]} + 1`
-
-        # ccvernhdev=${ccver_list[0]}.$ccvernhdev.${ccver_list[2]}
-        #  #### 농협정보 운영버전 ####
-        # newccver=`expr ${ccver_list[0]} + 1`
-        # ccvernhprod=$ccvernhprod.${ccver_list[1]}.${ccver_list[2]}
-
     fi
 
     ./scripts/network/04_install_chaincode_with_package.sh $ch $cc $ccver $newccver
@@ -159,17 +145,17 @@ function checkChaincode() {
 function startDocker() {
 
     if [ "$2" == "ca" ]; then
-        container_name="ca.orghana.com setup"
+        container_name="ca.orgsub1.com setup"
     elif [ "$2" == "p" ]; then
-        container_name="peer0.orghana.com"
+        container_name="peer0.orgsub1.com"
     elif [ "$2" == "co" ]; then
-        container_name="couchdb0.orghana.com"
+        container_name="couchdb0.orgsub1.com"
     else
         container_name=$2
     fi
 
     if [ $# -ne 2 ]; then
-        echo "start hana_network"
+        echo "start sub1_network"
         ./scripts/network/01_start_docker_container_server1.sh
         exit 1
 
@@ -177,7 +163,7 @@ function startDocker() {
         docker-compose -f ./compose-files/docker-compose.yaml up -d $container_name
 
         if [ "$2" == "ca" ]; then
-         ./bin/configtxgen -printOrg hana > hana.json
+         ./bin/configtxgen -printOrg sub1 > sub1.json
          fi
 
         exit 1
@@ -188,11 +174,11 @@ function startDocker() {
 function stopDocker() {
 
     if [ "$2" == "ca" ]; then
-        container_name="ca.orghana.com setup"
+        container_name="ca.orgsub1.com setup"
     elif [ "$2" == "p" ]; then
-        container_name="peer0.orghana.com"
+        container_name="peer0.orgsub1.com"
     elif [ "$2" == "co" ]; then
-        container_name="couchdb0.orghana.com"
+        container_name="couchdb0.orgsub1.com"
     else
         container_name=$2
     fi
