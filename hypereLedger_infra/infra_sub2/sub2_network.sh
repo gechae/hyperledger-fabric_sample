@@ -12,7 +12,7 @@ function printHelp() {
     echo "  sub2_network.sh -down [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
     echo "  sub2_network.sh -down [container_name <other containers>]"
     echo
-    # echo "  minj_network.sh -install [channel_name] [chaincode_name] [version (optional)]"
+    # echo "  sub2_network.sh -install [channel_name] [chaincode_name] [version (optional)]"
     echo "  sub2_network.sh -install [channel_name] [chaincode_name] [version] <install chaincode to specific version>"
     echo
     echo "start example: "
@@ -30,16 +30,16 @@ function printHelp() {
     echo "  sub2_network.sh -down cli <cli container stop>"
     echo
     echo "install example"
-    # echo "  sub2_network.sh -install cert-channel minj-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  sub2_network.sh -install cert-channel minj-cert-cc 3.2.11 <install to specific version>"
-    # echo "  sub2_network.sh -install tsa-channel minj-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  sub2_network.sh -install tsa-channel minj-tsa-cc 3.2.11 <install to specific version>"
+    # echo "  sub2_network.sh -install cert-channel test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub2_network.sh -install cert-channel test-cc 3.2.11 <install to specific version>"
+    # echo "  sub2_network.sh -install tsa-channel test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub2_network.sh -install tsa-channel test-cc 3.2.11 <install to specific version>"
     echo
     echo "upgrade example"
-    # echo "  sub2_network.sh -install cert-channel minj-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  sub2_network.sh -upgrade cert-channel minj-cert-cc 3.2.11 <upgrade to specific version>"
-    # echo "  sub2_network.sh -install tsa-channel minj-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  sub2_network.sh -upgrade tsa-channel minj-tsa-cc 3.2.11 <upgrade to specific version>"
+    # echo "  sub2_network.sh -install cert-channel test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub2_network.sh -upgrade cert-channel test-cc 3.2.11 <upgrade to specific version>"
+    # echo "  sub2_network.sh -install tsa-channel test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  sub2_network.sh -upgrade tsa-channel test-cc 3.2.11 <upgrade to specific version>"
     echo
     echo "============"
     echo "   NOTICE   "
@@ -158,7 +158,7 @@ function startDocker() {
     fi
 
     if [ $# -ne 2 ]; then
-        echo "start minj_network"
+        echo "start sub2_network"
         ./scripts/network/01_start_docker_container_server1.sh
         exit 1
 
