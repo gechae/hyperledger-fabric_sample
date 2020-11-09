@@ -1,0 +1,57 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2.1'
+
+services:
+  peer-base:
+    image: hyperledger/fabric-peer:1.4.7
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=sub1-network
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.key
+      - TZ=Asia/Seoul
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+  ca-env:
+    environment:
+      - TZ=Asia/Seoul
+      - ADMINCERTS=true
+      # Names of the peer organizations ex) PEER_ORGS= org1 org2 org3
+      - PEER_ORGS=sub1
+      # Names of the orderer organizations ex) ORDERER_ORGS= org1 org2 org3
+
+      # - ORDERER_ORGS=orderer
+      # Number of peers or orderers in each organization 
+      #  ex) NUM_PEERS=2
+      #      NUM_ORDERER=2
+      - NUM_PEERS=1
+      # - NUM_ORDERERS=3   
+    
+      # You must specify the port of the ca server
+      # ex) CA_SERVER_org1=7054
+      - CA_SERVER_PORT_sub1=9070
+      # - CA_SERVER_PORT_orderer=8054
+
+      # You must specify orders port
+      # ex) ORDERER_PORT_(org)(num)=7054
+      #     ORDERER_PORT_orderer0=7054
+      # - ORDERER_PORT_orderer0=7050
+      # - ORDERER_PORT_orderer1=7050
+      # - ORDERER_PORT_orderer2=7050
+
+      # - CHANNEL_NAME_1=cert-channel
+      # - CHANNEL_NAME_2=tsa-channel
+      - PROD_USER=${PROD_USER}
+

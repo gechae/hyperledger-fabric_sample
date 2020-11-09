@@ -1,0 +1,30 @@
+#!/bin/bash
+
+ORG=sub2
+
+CHANNEL_NAME="channel2"
+CHAINCODE_NAME="WTW-cc"
+ORDERER_ADDRESS0="orderer1.orgorderer.com:9060"
+ORDERER_ADDRESS1="orderer2.orgorderer.com:9060"
+CERT_DIR="/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto"
+CA_FILE="${CERT_DIR}/ordererOrganizations/orgorderer.com/msp/tlscacerts/ca-orgorderer-com-9080.pem"
+
+CHAINCODE_VERSION=0.0.01
+CHAINCODE_PATH=github.com/chaincode/$CHAINCODE_NAME/go/
+CHAINCODE_PACKAGE_FILE=${CHAINCODE_NAME}_v${CHAINCODE_VERSION}.out
+CHAINCODE_PACKAGE_FILE_PATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts/$CHAINCODE_PACKAGE_FILE
+
+
+
+
+ENV_STR_PEER0="
+    -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org${ORG}.com/peers/peer1.org${ORG}.com/msp/cacerts/ca-org${ORG}-com-9070.pem" \
+    -e "CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org${ORG}.com/peers/peer1.org${ORG}.com/tls/server.key" \
+    -e "CORE_PEER_LOCALMSPID=${ORG}MSP" \
+    -e "CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org${ORG}.com/peers/peer1.org${ORG}.com/tls/server.crt" \
+    -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org${ORG}.com/users/Admin@org${ORG}.com/msp/" \
+    -e "CORE_PEER_ADDRESS=peer1.org${ORG}.com:9051""
+
+
+
+

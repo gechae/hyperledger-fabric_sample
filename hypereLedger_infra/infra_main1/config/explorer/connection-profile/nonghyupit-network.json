@@ -1,0 +1,80 @@
+{
+	"name": "nonghyupit-network",
+	"version": "1.0.0",
+	"license": "Apache-2.0",
+	"client": {
+	  "tlsEnable": true,
+	  "adminUser": "admin",
+	  "adminPassword": "adminpw",
+	  "enableAuthentication": true,
+	  "organization": "nonghyupitMSP",
+	  "connection": {
+		"timeout": {
+		  "peer": {
+			"endorser": "300"
+		  },
+		  "orderer": "300"
+		}
+	  }
+	},
+	"channels": {
+	  "cert-channel": {
+		"peers": {
+		  "peer0.orgnonghyupit.com": {
+			
+		  }
+		},
+		"connection": {
+		  "timeout": {
+			"peer": {
+			  "endorser": "6000",
+			  "eventHub": "6000",
+			  "eventReg": "6000"
+			}
+		  }
+		}
+	  },
+	  "tsa-channel": {
+		"peers": {
+		  "peer0.orgnonghyupit.com": {
+			
+		
+		
+		}
+		},
+		"connection": {
+		  "timeout": {
+			"peer": {
+			  "endorser": "6000",
+			  "eventHub": "6000",
+			  "eventReg": "6000"
+			}
+		  }
+		}
+	  }
+	},
+	"organizations": {
+	  "nonghyupitMSP": {
+		"mspid": "nonghyupitMSP",
+		"fullpath": true,
+		"adminPrivateKey": {
+		  "path": "/tmp/crypto/peerOrganizations/orgnonghyupit.com/users/Admin@orgnonghyupit.com/msp/keystore/ea8c6b6dac4bcc3b708ddcbbd9faa16a56846e8d45e84ec96ed5340564257c17_sk"
+		},
+		"signedCert": {
+		  "path": "/tmp/crypto/peerOrganizations/orgnonghyupit.com/users/Admin@orgnonghyupit.com/msp/signcerts/cert.pem"
+		}
+	  }
+	},
+	"peers": {
+	  "peer0.orgnonghyupit.com": {
+		"tlsCACerts": {
+		  "path": "/tmp/crypto/peerOrganizations/orgnonghyupit.com/peers/peer0.orgnonghyupit.com/msp/cacerts/ca-orgnonghyupit-com-7054.pem"
+		},
+		"url": "grpcs://peer0.orgnonghyupit.com:7051",
+		"eventUrl": "grpcs://peer0.orgnonghyupit.com:7053",
+		"grpcOptions": {
+		  "ssl-target-name-override": "peer0.orgnonghyupit.com"
+		}
+	  }
+	}
+  }

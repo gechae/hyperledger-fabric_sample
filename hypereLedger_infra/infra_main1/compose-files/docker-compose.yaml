@@ -1,0 +1,339 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2.1'
+
+networks:
+  test-network:
+    name: test-network
+    ipam:
+      driver: default
+      config: 
+        - subnet: 123.133.133.0/16
+
+services:
+  orderer1.orgorderer.com:
+    container_name: orderer1.orgorderer.com
+    image: hyperledger/fabric-orderer:1.4.7
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/orderer/msp
+      - ORDERER_GENERAL_LISTENPORT=9060
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/orderer/msp/cacerts/ca-orgorderer-com-9080.pem]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/orderer/msp/cacerts/ca-orgorderer-com-9080.pem]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: /bin/bash -c '/scripts/start-orderer1.sh'
+    logging:
+      driver: none
+    volumes:
+      - ../scripts/container:/scripts
+      - ../..//log/container_logs/orderer1.orgorderer.com:/log
+      - ../channel-artifacts/genesis.block:/etc/hyperledger/orderer/orderer.genesis.block
+      - ../crypto-config/ordererOrganizations/orgorderer.com/users/Admin@orgorderer.com/msp/:/etc/hyperledger/orderer/admin/msp
+      - ../crypto-config/ordererOrganizations/orgorderer.com/orderers/orderer1.orgorderer.com:/etc/hyperledger/orderer
+      - ../../data/production/orderer1.orgorderer.com/:/var/hyperledger/production
+    ports:
+      - 9060:9060
+    extra_hosts:
+      - orderer2.orgorderer.com:192.168.181.110
+      - orderer3.orgorderer.com:192.168.181.110 
+      - peer2.orgmain.com:192.168.181.110
+      - peer1.orgsub1.com:192.168.181.110
+      - peer1.orgsub2.com:192.168.181.110
+    networks:
+      - doro-network
+
+#  orderer3.orgorderer.com:
+#    container_name: orderer3.orgorderer.com
+#    image: hyperledger/fabric-orderer:1.4.7
+#    environment:
+#      - FABRIC_LOGGING_SPEC=INFO
+#      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+#      - ORDERER_GENERAL_GENESISMETHOD=file
+#      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/orderer/orderer.genesis.block
+#      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+#      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/orderer/msp
+#      - ORDERER_GENERAL_LISTENPORT=9061
+#      # enabled TLS
+#      - ORDERER_GENERAL_TLS_ENABLED=true
+#      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
+#      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
+#      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/orderer/msp/cacerts/ca-orgorderer-com-9080.pem]
+#      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
+#      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
+#      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/orderer/msp/cacerts/ca-orgorderer-com-9080.pem]
+#    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+#    command: /bin/bash -c '/scripts/start-orderer3.sh'
+#    logging:
+#      driver: none
+#    volumes:
+#      - ../scripts/container:/scripts
+#      - /log/blockchain/container_logs/orderer3.orgorderer.com:/log
+#      - ../channel-artifacts/genesis.block:/etc/hyperledger/orderer/orderer.genesis.block
+#      - ../crypto-config/ordererOrganizations/orgorderer.com/users/Admin@orgorderer.com/msp/:/etc/hyperledger/orderer/admin/msp
+#      - ../crypto-config/ordererOrganizations/orgorderer.com/orderers/orderer3.orgorderer.com:/etc/hyperledger/orderer
+#      - ../../data/production/orderer3.orgorderer.com/:/var/hyperledger/production
+#    ports:
+#      - 9061:9061
+#    extra_hosts:
+#      - orderer2.orgorderer.com:172.16.180.117
+#      - peer2.orgmain.com:172.16.180.116
+#      - peer1.orgsub1.com:127.16.186.116
+#    networks:
+#      - doro-network
+
+  peer1.orgmain.com:
+    container_name: peer1.orgmain.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.orgmain.com
+      - CORE_PEER_ADDRESS=peer1.orgmain.com:9050
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9050
+      # - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:37050
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.orgmain.com:9050
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.orgmain.com:9050 peer2.orgmain.com:9051
+      - CORE_PEER_LOCALMSPID=doroMSP
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp/cacerts/ca-orgmain-com-9070.pem
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1.orgmain.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=doro_dev0
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=doro!
+    command: /bin/bash -c '/scripts/start-peer.sh'
+    logging:
+      driver: none 
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../scripts/container:/scripts
+        - ../../log/container_logs/peer1.orgmain.com:/log
+        - ../crypto-config/peerOrganizations/orgmain.com/peers/peer1.orgmain.com/:/opt/gopath/src/github.com/hyperledger/fabric/peer
+        - ../../data/production/peer1.orgmain.com:/var/hyperledger/production
+    depends_on:
+      - couchdb1.orgmain.com
+    ports:
+      - 9050:9050
+    extra_hosts:
+      - orderer2.orgorderer.com:192.168.181.110
+      - orderer3.orgorderer.com:192.168.181.110 
+      - peer2.orgmain.com:192.168.181.110
+      - peer1.orgsub1.com:192.168.181.110
+      - peer1.orgsub2.com:192.168.181.110
+    networks:
+      - doro-network
+
+  couchdb1.orgmain.com:
+    container_name: couchdb1.orgmain.com
+    image: hyperledger/fabric-couchdb:0.4.20
+    environment:
+      - COUCHDB_USER=doro_dev0
+      - COUCHDB_PASSWORD=doro!
+    volumes:
+        - ../../data/couchdb/couchdb1.orgmain.com:/opt/couchdb/data
+        - ../../log/container_logs/couchdb1.orgmain.com:/opt/couchdb/log/
+        - ../config/couchdb/local1.ini:/opt/couchdb/etc/local.ini
+    ports:
+      - "5984:5984"
+    logging:
+      driver: none
+    networks:
+      - doro-network
+
+  setup:
+    container_name: setup
+    extends:
+      file: peer-base.yaml
+      service: ca-env
+    image: hyperledger/fabric-ca:1.4.7
+    environment:
+      - ORDERER_HOME=/etc/hyperledger/orderer
+      - PEER_HOME=/opt/gopath/src/github.com/hyperledger/fabric/peer
+    #command: /bin/bash -c '/scripts/setup-fabric.sh&& sleep 9999'
+    volumes:
+      - ../scripts/container:/scripts
+      - ../crypto-config:/crypto-config
+      - ../channel-artifacts:/root/data
+    networks:
+      - doro-network
+
+
+  ca.orgmain.com:
+    container_name: ca.orgmain.com
+    image: hyperledger/fabric-ca:1.4.7
+    extends:
+      file: peer-base.yaml
+      service: ca-env
+    environment:
+      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
+      - FABRIC_CA_SERVER_CSR_CN=ca.orgmain.com
+      - FABRIC_CA_SERVER_CSR_HOSTS=ca.orgmain.ex.,co.kr
+      - FABRIC_CA_SERVER_DEBUG=true
+      - FABRIC_CA_SERVER_CA_NAME=ca-doro
+      - FABRIC_CA_SERVER_TLS_ENABLED=false
+      - FABRIC_CA_SERVER_PORT=9070
+      - FABRIC_CA_SERVER_SIGNING_DEFAULT_EXPIRY=876600h
+      - FABRIC_CA_SERVER_SIGNING_PROFILES_TLS_EXPIRY=876600h
+      - FABRIC_CA_SERVER_CSR_CA_EXPIRY=876600h
+    ports:
+      - 9070:9070
+    command: /bin/bash -c '/scripts/start-root-ca.sh'
+    logging:
+      driver: none 
+    volumes:
+      - ../scripts/container:/scripts
+      - ../crypto-config:/crypto-config
+      - ../../data/ca/ca.orgmain.com:/etc/hyperledger/fabric-ca
+      - ../../log/container_logs/ca.orgmain.com:/log
+    networks:
+      - doro-network
+
+
+  ca.orgorderer.com:
+    container_name: ca.orgorderer.com
+    image: hyperledger/fabric-ca:1.4.7
+    extends:
+      file: peer-base.yaml
+      service: ca-env
+    environment:
+      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
+      - FABRIC_CA_SERVER_CSR_CN=ca.orgorderer.com
+      - FABRIC_CA_SERVER_CSR_HOSTS=ca.orgorderer.com
+      - FABRIC_CA_SERVER_DEBUG=true
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer
+      - FABRIC_CA_SERVER_TLS_ENABLED=false
+      - FABRIC_CA_SERVER_PORT=9080
+      - FABRIC_CA_SERVER_SIGNING_DEFAULT_EXPIRY=876600h
+      - FABRIC_CA_SERVER_SIGNING_PROFILES_TLS_EXPIRY=876600h
+      - FABRIC_CA_SERVER_CSR_CA_EXPIRY=876600h
+    ports:
+      - 9080:9080
+    command: /bin/bash -c '/scripts/start-root-ca.sh'
+    logging:
+      driver: none 
+    volumes:
+      - ../scripts/container:/scripts
+      - ../crypto-config:/crypto-config
+      - ../../data/ca/ca.orgorderer.com:/etc/hyperledger/fabric-ca
+      - ../../log/container_logs/ca.orgorderer.com:/log
+    networks:
+      - doro-network
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools:1.4.7
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer1.orgmain.com:9050
+      - CORE_PEER_LOCALMSPID=doroMSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgmain.com/peers/peer1.orgmain.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgmain.com/peers/peer1.orgmain.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgmain.com/peers/peer1.orgmain.com/msp/cacerts/ca-orgmain-com-9070.pem
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgmain.com/users/Admin@orgmain.com/msp/
+      - TZ=Asia/Seoul
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash 
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../scripts/cron:/scripts
+        - ../../log/container_logs:/logs
+        - ../chaincode/:/opt/gopath/src/github.com/chaincode
+        - ../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+        - ../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+    extra_hosts:
+      - orderer2.orgorderer.com:192.168.181.110
+      - orderer3.orgorderer.com:192.168.181.110 
+      - peer2.orgmain.com:192.168.181.110
+      - peer1.orgsub1.com:192.168.181.110
+      - peer1.orgsub2.com:192.168.181.110
+    networks:
+      - doro-network
+
+  # explorer.orgmain.com:
+  #   container_name: explorer.orgmain.com
+  #   # image: hyperledger/explorer:1.0.0-rc2-kst
+  #   image: hyperledger/explorer:test5
+  #   # image: hyperledger/explorer:0.3.9.1
+  #   working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+  #   environment:
+  #     - DATABASE_HOST=explorerdb.orgmain.com
+  #     - DATABASE_DATABASE=fabricexplorer
+  #     - DATABASE_USERNAME=hppoc
+  #     - DATABASE_PASSWD=password
+  #     - LOG_LEVEL_APP=INFO
+  #     - LOG_LEVEL_DB=INFO
+  #     - LOG_LEVEL_CONSOLE=info
+  #     - LOG_CONSOLE_STDOUT=true
+  #     - DISCOVERY_AS_LOCALHOST=false
+  #   volumes:
+  #     - ../config/explorer/config.json:/opt/explorer/app/platform/fabric/config.json
+  #     - ../config/explorer/connection-profile:/opt/explorer/app/platform/fabric/connection-profile
+  #     # - ../config/explorer/Proxy.js:/opt/explorer/app/platform/fabric/Proxy.js
+  #     # - ../config/explorer/AdminPeer.js:/opt/explorer/app/platform/fabric/AdminPeer.js
+  #     # - ../config/explorer/SyncPlatform.js:/opt/explorer/app/platform/fabric/sync/SyncPlatform.js
+  #     # - ../config/explorer/FabricClient.js:/opt/explorer/app/platform/fabric/FabricClient.js
+  #     - ../crypto-config:/tmp/crypto
+  #     - ../../logs/container_logs/explorer.orgmain.com:/opt/gopath/src/github.com/hyperledger/fabric/peer/logs/app
+  #     - ../../logs/container_logs/explorer.orgmain.com:/opt/gopath/src/github.com/hyperledger/fabric/peer/logs/db
+  #   command: sh -c "node /opt/explorer/main.js && tail -f /dev/null"
+  #   # logging:
+  #   #   driver: none 
+  #   depends_on:
+  #     explorerdb.orgmain.com:
+  #       condition: service_healthy
+  #   ports:
+  #     - 9005:8080
+  #   extra_hosts:
+  #     - orderer1.orgorderer.com:192.168.65.168
+  #     - orderer2.orgorderer.com:192.168.65.169
+  #     - peer1.orgmain.com:192.168.65.168
+  #     - peer2.orgmain.com:192.168.65.169
+  #     - peer0.ornhtest.com:192.168.65.180
+  #   networks:
+  #     - doro-network
+
+  # explorerdb.orgmain.com:
+  #   container_name: explorerdb.orgmain.com
+  #   image: hyperledger/explorer-db:1.0.0-rc2
+  #   # image: hyperledger/explorer-db:0.3.9.1
+  #   environment:
+  #     - DATABASE_DATABASE=fabricexplorer
+  #     - DATABASE_USERNAME=hppoc
+  #     - DATABASE_PASSWORD=password
+  #     - TZ=Asia/Seoul
+  #   networks:
+  #     - doro-network
+  #   volumes:
+  #     - ../../data/explorer:/var/lib/postgresql/data
+  #   logging:
+  #     driver: none 
+
+  #   healthcheck:
+  #     test: "pg_isready -h localhost -p 5432 -q -U postgres"
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #   ports:
+  #     - 5432:5432
+  #   extra_hosts:
+  #     - orderer0.orgorderer.com:192.168.65.168
+  #     - orderer1.orgorderer.com:192.168.65.169
+  #     - peer0.orgmain.com:192.168.65.168
+  #     - peer1.orgmain.com:192.168.65.169

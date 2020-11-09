@@ -1,0 +1,9 @@
+
+Organizations:
+    - &sub1
+        Name: sub1
+        ID: sub1MSP
+        MSPDir: ./crypto-config/peerOrganizations/orgsub1.com/msp
+        AnchorPeers:
+            - Host: peer1.orgsub1.com
+              Port: 9050

@@ -1,0 +1,8 @@
+{
+	"index":{
+		"fields":[{"works":"desc"}]
+	},
+	"ddoc":"testDoc",
+	"name":"testInfo",
+	"type":"json"
+}

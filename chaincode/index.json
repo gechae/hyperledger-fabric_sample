@@ -1,0 +1,8 @@
+{
+	"index":{
+		"fields":[{"search_token":"desc"}]
+	},
+	"ddoc":"func2Doc",
+	"name":"func2Pagination",
+	"type":"json"
+}

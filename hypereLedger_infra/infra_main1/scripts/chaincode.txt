@@ -1,0 +1,1 @@
+#Name: test-cc, Version: 0.0.01, Path: github.com/chaincode/test-cc/go/, Escc: escc, Vscc: vscc

@@ -1,0 +1,9 @@
+{
+	"network-configs": {
+		"nonghyupit-network": {
+			"name": "  nonghyupit-network",
+			"profile": "./connection-profile/nonghyupit-network.json"
+		}
+	},
+	"license": "Apache-2.0"
+}
