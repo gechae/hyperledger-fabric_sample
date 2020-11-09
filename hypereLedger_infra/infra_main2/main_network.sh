@@ -5,66 +5,66 @@ function printHelp() {
     echo
     echo
     echo "Usage: "
-    echo "  doro_network.sh -up <after start ca, setup container and copy crypto-config to other server, start fabric network> "
-    echo "  doro_network.sh -up [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
-    echo "  doro_network.sh -up [container_name <other containers>]"
-    echo "  doro_network.sh -down <all containers stop and network reset>"
-    echo "  doro_network.sh -down [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
-    echo "  doro_network.sh -down [container_name <other containers>]"
+    echo "  main_network.sh -up <after start ca, setup container and copy crypto-config to other server, start fabric network> "
+    echo "  main_network.sh -up [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
+    echo "  main_network.sh -up [container_name <other containers>]"
+    echo "  main_network.sh -down <all containers stop and network reset>"
+    echo "  main_network.sh -down [ca <ca, setup>] [o <orderer>] [p <peer>] [co <couchdb>] [ex <explorer>] [exdb <explorer db>]"
+    echo "  main_network.sh -down [container_name <other containers>]"
     echo
-    # echo "  doro_network.sh -install [channel_name] [chaincode_name] [version (optional)]"
-    echo "  doro_network.sh -install [channel_name] [chaincode_name] [version] <install chaincode to specific version>"
+    # echo "  main_network.sh -install [channel_name] [chaincode_name] [version (optional)]"
+    echo "  main_network.sh -install [channel_name] [chaincode_name] [version] <install chaincode to specific version>"
     echo
-    echo "  doro_network.sh -upgrade [channel_name] [chaincode_name] [version] <upgrade chaincode to specific version>"
+    echo "  main_network.sh -upgrade [channel_name] [chaincode_name] [version] <upgrade chaincode to specific version>"
     echo
-    echo "  doro_network.sh -addorg [channel_name] [org name] <add organization to the channel>"
+    echo "  main_network.sh -addorg [channel_name] [org name] <add organization to the channel>"
     echo
-    echo "  doro_network.sh -removeorg [channel_name] [org name] <add organization to the channel>"
+    echo "  main_network.sh -removeorg [channel_name] [org name] <add organization to the channel>"
     echo
-    echo "  doro_network.sh -getconfig [channel_name] <get config in channel>"
-    echo "  doro_network.sh -setconfig [channel_name] <set config in channel after you modified existing config>"
+    echo "  main_network.sh -getconfig [channel_name] <get config in channel>"
+    echo "  main_network.sh -setconfig [channel_name] <set config in channel after you modified existing config>"
     echo
     echo "start example: "
-    echo "  doro_network.sh -up "
-    echo "  doro_network.sh -up ca <ca, setup container start>"
-    echo "  doro_network.sh -up o <orderer container start>"
-    echo "  doro_network.sh -up p <peer container start>"
-    echo "  doro_network.sh -up cli <cli container start>"
+    echo "  main_network.sh -up "
+    echo "  main_network.sh -up ca <ca, setup container start>"
+    echo "  main_network.sh -up o <orderer container start>"
+    echo "  main_network.sh -up p <peer container start>"
+    echo "  main_network.sh -up cli <cli container start>"
     echo
     echo "shutdown example"
-    echo "  doro_network.sh -down "
-    echo "  doro_network.sh -down ca <ca, setup container stop>"
-    echo "  doro_network.sh -down o <orderer container stop>"
-    echo "  doro_network.sh -down p <peer container stop>"
-    echo "  doro_network.sh -down cli <cli container stop>"
+    echo "  main_network.sh -down "
+    echo "  main_network.sh -down ca <ca, setup container stop>"
+    echo "  main_network.sh -down o <orderer container stop>"
+    echo "  main_network.sh -down p <peer container stop>"
+    echo "  main_network.sh -down cli <cli container stop>"
     echo
     echo "install example"
-    # echo "  doro_network.sh -install cert-channel doro-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  doro_network.sh -install cert-channel doro-cert-cc 3.2.11 <install to specific version>"
-    # echo "  doro_network.sh -install tsa-channel doro-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  doro_network.sh -install tsa-channel doro-tsa-cc 3.2.11 <install to specific version>"
+    # echo "  main_network.sh -install channel1 test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  main_network.sh -install channel1 test-cc 3.2.11 <install to specific version>"
+    # echo "  main_network.sh -install channel1 test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  main_network.sh -install channel1 test-cc 3.2.11 <install to specific version>"
     echo
     echo "upgrade example"
-    # echo "  doro_network.sh -install cert-channel doro-cert-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  doro_network.sh -upgrade cert-channel doro-cert-cc 3.2.11 <upgrade to specific version>"
-    # echo "  doro_network.sh -install tsa-channel doro-tsa-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
-    echo "  doro_network.sh -upgrade tsa-channel doro-tsa-cc 3.2.11 <upgrade to specific version>"
+    # echo "  main_network.sh -install channel1 test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  main_network.sh -upgrade channel1 test-cc 3.2.11 <upgrade to specific version>"
+    # echo "  main_network.sh -install channel1 test-cc <upgrade to the next version ex) 1.0.00 > 2.0.0>"
+    echo "  main_network.sh -upgrade channel1 test-cc 3.2.11 <upgrade to specific version>"
     echo
     echo "addorg example"
-    echo "  doro_network.sh -addorg cert-channel test"
-    echo "  doro_network.sh -addorg tsa-channel test"
+    echo "  main_network.sh -addorg channel1 test"
+    echo "  main_network.sh -addorg channel1 test"
     echo
     echo "removeorg example"
-    echo "  doro_network.sh -removeorg cert-channel test"
-    echo "  doro_network.sh -removeorg tsa-channel test"
+    echo "  main_network.sh -removeorg channel1 test"
+    echo "  main_network.sh -removeorg channel1 test"
     echo
     echo "get config example"
     echo "  doro_network.sh -getconfig cert-channel"
     echo "  doro_network.sh -getconfig tsa-channel"
     echo
     echo "set config example"
-    echo "  doro_network.sh -setconfig cert-channel"
-    echo "  doro_network.sh -setconfig tsa-channel"
+    echo "  main_network.sh -setconfig channel1"
+    echo "  main_network.sh -setconfig channel1"
     echo
     echo "============"
     echo "   NOTICE   "
@@ -173,25 +173,6 @@ function installChaincode() {
         echo "You must input chaincode version"
         exit 1
 
-        # #### 핑거버전 ####
-        # newccver=$(expr ${ccver_list[2]} + 1)
-        # newccver=$(seq -f "%02g" $newccver $newccver)
-        # newccver=${ccver_list[0]}.${ccver_list[1]}.$newccver
-
-        #  #### 농협정보 개발버전 ####
-        # newccver=`expr ${ccver_list[1]} + 1`
-
-        # ccvernhdev=${ccver_list[0]}.$ccvernhdev.${ccver_list[2]}
-        #  #### 농협정보 운영버전 ####
-        # newccver=`expr ${ccver_list[0]} + 1`
-        # ccvernhprod=$ccvernhprod.${ccver_list[1]}.${ccver_list[2]}
-
-    fi
-
-    ./scripts/network/04_2_install_chaincode.sh $ch $cc $ccver $newccver
-
-    echo "Succcess install in $ch chaincode : $cc, version: $newccver"
-
 }
 
 function checkChannel() {
@@ -254,17 +235,17 @@ function checkChaincode() {
 function startDocker() {
 
     if [ "$2" == "ca" ]; then
-        container_name="ca.orgdoro.com setup"
+        container_name="ca.orgmain.com setup"
     elif [ "$2" == "p" ]; then
-        container_name="peer1.orgdoro.com"
+        container_name="peer1.orgmain.com"
     elif [ "$2" == "co" ]; then
-        container_name="couchdb0.orgdoro.com"
+        container_name="couchdb0.orgmain.com"
     else
         container_name=$2
     fi
 
     if [ $# -ne 2 ]; then
-        echo "start doro_network"
+        echo "start main_network"
         ./scripts/network/01_start_docker_container_server1.sh
         sleep 20
         #./scripts/network/03_channel_join.sh
@@ -282,11 +263,11 @@ function startDocker() {
 function stopDocker() {
 
     if [ "$2" == "ca" ]; then
-        container_name="ca.orgdoro.com setup"
+        container_name="ca.orgmain.com setup"
     elif [ "$2" == "p" ]; then
-        container_name="peer1.orgdoro.com"
+        container_name="peer1.orgmain.com"
     elif [ "$2" == "co" ]; then
-        container_name="couchdb0.orgdoro.com"
+        container_name="couchdb0.orgmain.com"
 
     else
         container_name=$2
