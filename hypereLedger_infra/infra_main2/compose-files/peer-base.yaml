@@ -51,8 +51,8 @@ services:
       #- ORDERER_PORT_orderer1=37061
       #- ORDERER_PORT_orderer2=36060
 
-      #- CHANNEL_NAME_1=dm-channel
-      #- CHANNEL_NAME_2=dh-channel
+      #- CHANNEL_NAME_1=channel1
+      #- CHANNEL_NAME_2=channel1
 
       - PROD_USER=${PROD_USER}
 
